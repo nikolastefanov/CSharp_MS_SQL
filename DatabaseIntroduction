@@ -1,0 +1,681 @@
+CREATE DATABASE Minions
+
+USE Minions
+
+CREATE TABLE Minions(
+Id INT PRIMARY KEY NOT NULL,
+[Name] NVARCHAR(50) NOT NULL,
+Age INT
+)
+
+CREATE TABLE Towns(
+Id INT PRIMARY KEY NOT NULL,
+[Name] NVARCHAR(50) NOT NULL
+)
+
+ALTER TABLE Minions
+ADD TownId INT FOREIGN KEY REFERENCES Towns(Id)
+
+INSERT INTO Towns(Id,[Name])
+   VALUES
+   (1,'Sofia'),
+   (2,'Plovdiv'),
+   (3,'Varna')
+
+   SELECT * FROM Towns
+
+ INSERT INTO Minions(Id,[Name],Age,TownId)
+      VALUES
+         (1,'Kevin',22,1),
+         (2,'Bob',15,3),
+		 (3,'Steward',NUll,2)
+
+		 SELECT * FROM Minions
+		 SELECT * FROM Towns
+
+
+		 TRUNCATE TABLE Minions
+		 
+		 DROP TABLE Minions
+		 DROP TABLE Towns
+
+
+
+
+zad_7
+
+
+CREATE DATABASE Minions
+
+USE Minions
+
+CREATE TABLE People
+(
+  Id BIGINT PRIMARY KEY IDENTITY NOT NULL,
+
+  [Name] VARCHAR(200) UNIQUE NOT NULL,
+
+  Picture VARBINARY(MAX) 
+        CHECK(DATALENGTH(Picture)<=2000*1024),
+
+  Height FLOAT(5,2),
+
+  [Weight] FLOAT(10,2),
+
+  Gender CHAR(1),
+
+  Birthdate DATE NOT NULL,
+
+  Biography NVARCHAR(MAX)
+
+    )
+
+
+	INSERT INTO People([Name],Picture,Height
+	        ,[Weight],Gender,Birthdate,Biography)
+
+			VALUES
+			('Pesho0',NULL,1.80,80.23,'m','02.19.2000',null),
+			('Pesho1',NULL,1.80,80.23,'m','02.19.2000',null),
+			('Pesho2',NULL,1.80,80.23,'m','02.19.2000',null),
+			('Pesho3',NULL,1.80,80.23,'m','02.19.2000',null),
+			('Pesho4',NULL,1.80,80.23,'m','02.19.2000',null)
+
+
+
+
+zad_8
+USE Minions
+
+CREATE TABLE Users(
+
+  Id BIGINT PRIMARY KEY IDENTITY NOT NULL,
+
+   Username VARCHAR(30) UNIQUE NOT NULL,
+
+   [Password] VARCHAR(26) NOT NULL,
+
+    ProfilePicture VARBINARY(MAX) CHECK (DATALENGTH(ProfilePicture)<=900*1024),
+
+    LastLoginTime DATETIME2 NOT NULL,
+
+     IsDeleted BIT NOT NULL
+
+  )
+
+  INSERT INTO Users(Username,[Password],LastLoginTime,IsDeleted)
+
+  VALUES
+     ('Pesho0','123456','05.19.2020',0),
+	   ('Pesho1','123456','05.19.2020',1),
+	     ('Pesho2','123456','05.19.2020',0),
+		   ('Pesho3','123456','05.19.2020',1),
+		     ('Pesho4','123456','05.19.2020',0)
+
+			 
+
+			 SELECT * FROM Users
+       
+       
+       
+       
+
+       --zad 9
+
+  ALTER TABLE Users
+
+  DROP CONSTRAINT [PK_Users_3214ECO73600972B]
+
+  ALTER TABLE Users
+
+  ADD CONSTRAINT PK_Users_CompositeIdUsername 
+            PRIMARY KEY(Id,Username)
+
+--zad10
+
+ALTER TABLE Users
+
+ADD Constraint CK_Users_PasswordLength
+   CHECK(LEN([Password])>=5)
+
+
+   --zad 11
+ALTER TABLE Users
+
+ADD CONSTAINT DF_Users_LastLoginTime
+  DEFAULT GETDATE() FOR LastLoginTime
+
+
+zad_13
+CREATE DATABASE Movies
+
+Use Movies
+
+CREATE TABLE Directors
+(
+Id INT PRIMARY KEY IDENTITY,
+
+DirectorName NVARCHAR(50) Not NUll,
+
+Notes NVARCHAR(100)
+)
+
+CREATE TABLE Genres
+(
+Id INT PRIMARY KEY IDENTITY,
+
+GenreName NVARCHAR(50) Not NUll,
+
+Notes NVARCHAR(100)
+)
+
+CREATE TABLE Categories
+(
+Id INT PRIMARY KEY IDENTITY,
+
+CategoryName NVARCHAR(50) Not NUll,
+
+Notes NVARCHAR(100)
+)
+
+
+CREATE TABLE Movies
+(
+Id INT PRIMARY KEY IDENTITY,
+
+Title NVARCHAR(30) NOT NULL,
+
+DirectorId INT FOREIGN KEY REFERENCES Directors(Id),
+
+CopyrightYear INT,
+
+[Length] INT,
+
+GenreId INT FOREIGN KEY REFERENCES Genres(Id),
+
+CategoryId INT FOREIGN KEY REFERENCES Genres(Id),
+
+Rating INT,
+
+Notes NVARCHAR(100)
+)
+
+
+INSERT INTO Directors(DirectorName)
+
+VALUES ('Pesho1'),
+       ('Pesho2'),
+       ('Pesho3'),
+       ('Pesho4'),
+       ('Pesho5')
+
+INSERT INTO Genres(GenreName)
+
+VAlUES
+  ('Gosho1'),
+  ('Gosho2,'),
+  ('Gosho3'),
+  ('Gosho4'),
+  ('Gosho5')
+
+  
+INSERT INTO Categories(CategoryName)
+
+VAlUES
+    ('Category1'),
+	 ('Category2'),
+	  ('Category3'),
+	   ('Category4'),
+	    ('Category5')
+
+
+INSERT INTO Movies(Title)
+	VALUES
+	('Title1'),
+		('Title2'),
+			('Title3'),
+				('Title4'),
+					('Title5')
+
+
+CREATE DATABASE CarRental
+
+Use CarRental
+
+--zad--14
+
+CREATE TABLE Categories
+(
+Id INT PRIMARY KEY IDENTITY,
+
+CategoryName NVARCHAR(30) NOT NULL,
+
+DailyRate DECIMAL(15,2),
+
+WeeklyRate DECIMAL(15,2),
+
+MonthlyRate DECIMAL(15,2),
+
+WeekendRate DECIMAL(15,2)
+)
+
+
+CREATE TABLE Cars
+(
+Id INT PRIMARY KEY IDENTITY,
+
+PlateNumber INT,
+
+Manufacturer NVARCHAR(20),
+
+Model NVARCHAR(20) NOT NULL,
+
+CarYear INT,
+
+CategoryId INT FOREIGN KEY REFERENCES Categories(Id),
+
+Doors INT,
+
+Picture VARBINARY(MAX) CHECK(DATALENGTH(Picture)<=1000*1024),
+
+Condition BINARY(1),
+
+Available BINARY(1)
+)
+
+
+CREATE TABLE Employees
+(
+Id INT PRIMARY KEY IDENTITY,
+
+FirstName NVARCHAR(30) NOT NULL,
+
+LastName NVARCHAR(30) NOT NULL,
+
+Title NVARCHAR(30)
+,
+Notes NVARCHAR(30)
+)
+
+
+CREATE TABLE Customers
+(
+Id INT PRIMARY KEY IDENTITY,
+
+DriverLicenceNumber INT NOT NULL,
+
+FullName  NVARCHAR(30) NOT NULL,
+
+[Address] NVARCHAR(30),
+
+City NVARCHAR(30),
+
+ZIPCode INT,
+
+Notes  NVARCHAR(50),
+)
+
+CREATE TABLE RentalOrders
+(
+Id INT PRIMARY KEY IDENTITY,
+
+EmployeeId INT FOREIGN KEY REFERENCES Employees(Id),
+
+CustomerId INT FOREIGN KEY REFERENCES Customers(Id),
+
+CarId INT FOREIGN KEY REFERENCES Cars(Id),
+
+TankLevel INT NOT NULL,
+
+KilometrageStart INT,
+
+KilometrageEnd INT,
+
+TotalKilometrage INT,
+
+StartDate DATE,
+
+EndDate DATE,
+
+TotalDays INT,
+
+RateApplied DECIMAL(15,2),
+
+TaxRate DECIMAL(15,2) NOT NULL,
+
+OrderStatus DECIMAL(15,2),
+
+Notes NVARCHAR(50)
+)
+
+
+
+INSERT INTO Categories(CategoryName)
+
+VALUES
+   ('CategoryName1'),
+    ('CategoryName2'),
+    ('CategoryName3')
+
+
+
+
+INSERT INTO Cars(Model)
+
+VALUES
+       ('Model1'),
+      ('Model2'),
+      ('Model3')
+
+
+
+INSERT INTO Employees(FirstName,LastName)
+
+VALUES
+  ('Pesho1','Peshev1'),
+   ('Pesho2','Peshev2'),
+    ('Pesho3','Peshev3')
+
+
+
+INSERT INTO Customers(DriverLicenceNumber, FullName)
+
+VALUES
+      (1234,'Pesho1'),
+	  (12345,'Pesho2'),
+	  (123456,'Pesho3')
+
+
+INSERT INTO RentalOrders(TankLevel,TaxRate)
+
+VALUES
+(2,23.45),
+(3,21.23),
+(4,46.23)
+
+
+
+CREATE DATABASE Hotel
+
+USE Hotel
+
+  --zad--15
+
+  CREATE TABLE Employees
+  (
+  Id INT PRIMARY KEY IDENTITY, 
+  FirstName NVARCHAR(20) NOT NULL,
+  LastName NVARCHAR(20), 
+  Title NVARCHAR(20), 
+  Notes NVARCHAR(50)
+  )
+
+
+  CREATE TABLE Customers 
+  (
+  AccountNumber INT PRIMARY KEY IDENTITY,
+  FirstName NVARCHAR(20) NOT NULL,
+  LastName NVARCHAR(20) , 
+  PhoneNumber INT, 
+  EmergencyName NVARCHAR(20), 
+  EmergencyNumber INT, 
+  Notes NVARCHAR(50),
+  )
+
+  CREATE TABLE RoomStatus 
+  (
+  RoomStatus INT, 
+  Notes NVARCHAR(50)
+  )
+
+  CREATE TABLE RoomTypes 
+  (
+  RoomType NVARCHAR(30), 
+  Notes NVARCHAR(50)
+  )
+
+  
+CREATE TABLE BedTypes 
+(
+BedType NVARCHAR(30), 
+Notes NVARCHAR(50)
+)
+
+
+
+CREATE TABLE Rooms 
+(
+RoomNumber INT PRIMARY KEY IDENTITY, 
+RoomType NVARCHAR(30), 
+BedType NVARCHAR(30), 
+Rate DECIMAL(15,2), 
+RoomStatus INT, 
+Notes NVARCHAR(50)
+)
+
+CREATE TABLE Payments 
+(
+Id INT PRIMARY KEY IDENTITY, 
+EmployeeId INT FOREIGN KEY REFERENCES Employees(Id), 
+PaymentDate DATE, 
+AccountNumber INT, 
+FirstDateOccupied DATE, 
+LastDateOccupied DATE , 
+TotalDays INT, 
+AmountCharged INT, 
+TaxRate DECIMAL(15,2) NOT NULL, 
+TaxAmount DECIMAL(15,2), 
+PaymentTotal INT, 
+Notes NVARCHAR(50)
+)
+
+CREATE TABLE Occupancies 
+(
+Id INT PRIMARY KEY IDENTITY, 
+EmployeeId INT FOREIGN KEY REFERENCES Employees(Id), 
+DateOccupied DATE, 
+AccountNumber INT, 
+RoomNumber INT, 
+RateApplied INT, 
+PhoneCharge INT, 
+Notes NVARCHAR(50)
+)
+
+INSERT INTO Employees (FirstName)
+VALUES
+     ('Pesho1'),
+     ('Pesho2'),
+     ('Pesho3')
+
+
+INSERT INTO Customers (FirstName)
+VALUES
+   ('Gosho1'),
+   ('Gosho2'),
+   ('Gosho3')
+
+
+   INSERT INTO RoomStatus(RoomStatus)
+   VALUES
+   (1),
+   (2),
+   (3)
+
+   INSERT INTO RoomTypes(RoomType)
+   VALUES
+   ('f'),
+   ('s'),
+   ('r')
+
+
+
+   INSERT INTO BedTypes(BedType)
+   VALUES
+   ('f'),
+   ('s'),
+   ('r')
+
+
+   INSERT INTO Rooms(Rate)
+   VALUES
+   (2.34),
+   (3.56),
+   (4.67)
+
+
+
+INSERT INTO Payments(TaxRate)
+VALUES
+   (2.34),
+   (3.56),
+   (4.67)
+
+
+   INSERT INTO Occupancies(RateApplied)
+   VALUES
+   (3),
+   (4),
+   (6)
+
+
+  --table-Payments
+  --column-TaxRate
+
+  --zad-23
+
+UPDATE Payments
+
+SET TaxRate -=TaxRate*0.03
+
+SELECT TaxRate FROM Payments
+
+
+--zad-24
+
+TRUNCATE TABLE Occupancies
+
+
+CREATE DATABASE SoftUni
+
+USE SoftUni
+
+--zad-16
+
+CREATE TABLE Towns
+(
+Id INT PRIMARY KEY IDENTITY,
+[Name] NVARCHAR(50) NOT NULL
+)
+
+CREATE TABLE Addresses
+(
+Id INT PRIMARY KEY IDENTITY,
+AddressesText NVARCHAR(100) NOT NULL,
+TownId INT FOREIGN KEY REFERENCES Towns(Id) NOT NULL
+)
+
+CREATE TABLE Departments
+(
+Id INT PRIMARY KEY IDENTITY,
+[Name] NVARCHAR(50) NOT NULL
+)
+
+CREATE TABLE Employees
+(
+Id INT PRIMARY KEY IDENTITY,
+FirstName NVARCHAR(50) NOT NULL,
+MiddleName NVARCHAR(50),
+LastName NVARCHAR(50) NOT NULL,
+JobTitle NVARCHAR(50) NOT NULL,
+DepartmentId INT FOREIGN KEY REFERENCES Departments(Id) NOT NULL,
+HireDate DATE NOT NULL,
+Salary  DECIMAL(7,2) NOT NULL,
+AddressId INT FOREIGN KEY REFERENCES Addresses(Id)
+)
+
+--zad--18
+
+INSERT INTO Towns([Name])
+VALUES
+('Sofia'),
+('Plovdiv'),
+('Varna'),
+('Burgas')
+
+
+INSERT INTO Departments([Name])
+VALUES
+('Engineering'),
+('Sales'),
+('Marketing'),
+('Software Development'),
+('Quality Assurance')
+
+
+
+
+INSERT INTO Employees(FirstName,MiddleName,LastName
+,JobTitle,DepartmentId,HireDate,Salary)
+VALUES
+('Ivan','Ivanov', 'Ivanov',	'.NET Developer',4,	'02/01/2013',3500.00),
+('Petar','Petrov','Petrov',	'Senior Engineer',1,'03/02/2004',4000.00),
+('Maria', 'Petrova', 'Ivanova',	'Intern',5,	'08/28/2016',525.25),
+('Georgi', 'Teziev','Ivanov','CEO',	2,'12/09/2007',3000.00),
+('Peter','Pan','Pan','Intern',3,'08/02/2016',599.88)
+
+
+--zad--19
+
+SELECT * FROM Towns
+
+SELECT * FROM Departments
+
+SELECT * FROM  Employees
+
+
+--zad--20
+
+SELECT * FROM Towns
+
+ORDER BY [Name] ASC
+
+
+SELECT * FROM Departments
+
+ORDER BY [Name] ASC
+
+
+SELECT * FROM  Employees
+
+ORDER BY Salary DESC
+
+--zad--21
+
+SELECT [Name] FROM Towns
+
+ORDER BY [Name] ASC
+
+
+SELECT [Name] FROM Departments
+
+ORDER BY [Name] ASC
+
+
+SELECT FirstName,LastName,JobTitle,Salary FROM Employees
+
+
+ORDER BY Salary DESC
+
+
+--zad--22
+
+UPDATE Employees
+
+SET Salary +=Salary*0.1
+
+SELECT Salary FROM
+
+
+
+
+
