@@ -1,0 +1,58 @@
+CREATE TABLE Logs (
+  LogId INT PRIMARY KEY IDENTITY,
+  AccountId INT,
+  OldSum MONEY,
+  NewSum MONEY
+)
+
+CREATE TRIGGER InsertNewEntryIntoLogs
+  ON Accounts
+  AFTER UPDATE
+AS
+  INSERT INTO Logs
+  VALUES (
+    (SELECT Id
+     FROM inserted),
+    (SELECT Balance
+     FROM deleted),
+    (SELECT Balance
+     FROM inserted)
+  )
+  
+  
+  CREATE TABLE NotificationEmails (
+  Id INT PRIMARY KEY IDENTITY,
+  Recipient INT,
+  Subject NVARCHAR(MAX),
+  Body NVARCHAR(MAX)
+)
+
+CREATE TRIGGER CreateNewNotificationEmail
+  ON Logs
+  AFTER INSERT
+AS
+  BEGIN
+    INSERT INTO NotificationEmails
+    VALUES (
+      (SELECT AccountId
+       FROM inserted),
+      (CONCAT('Balance change for account: ', (SELECT AccountId
+                                               FROM inserted))),
+      (CONCAT('On ', (SELECT GETDATE()
+                      FROM inserted), 'your balance was changed from ', (SELECT OldSum
+                                                                         FROM inserted), 'to ', (SELECT NewSum
+                                                                                                 FROM inserted), '.'))
+    )
+  END
+  
+  
+  CREATE PROCEDURE usp_DepositMoney(@AccountId INT, @MoneyAmount MONEY)
+AS
+  BEGIN TRANSACTION
+  UPDATE Accounts
+  SET Balance += @MoneyAmount
+  WHERE Id = @AccountId
+  COMMIT
+  
+  
+  
