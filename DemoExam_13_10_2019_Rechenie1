@@ -1,0 +1,146 @@
+CREATE DATABASE BitBucket
+
+USE BitBucket
+
+CREATE TABLE Repositories
+(
+Id INT PRIMARY KEY IDENTITY,
+[Name] NVARCHAR(50) NOT NULL
+)
+
+
+CREATE TABLE Users
+(
+Id INT PRIMARY KEY IDENTITY,
+Username NVARCHAR(30) NOT NULL,
+[Password] NVARCHAR(30) NOT NULL,
+[Email] NVARCHAR(50) NOT NULL
+)
+
+
+ CREATE TABLE RepositoriesContributors
+ (
+ RepositoryId INT NOT NULL,
+ ContributorId INT NOT NULL,
+ CONSTRAINT PK_RepositoriesContributors
+     PRIMARY KEY(RepositoryId, ContributorId ),
+CONSTRAINT FK_RepositoriesContributors_Repositories
+   FOREIGN KEY(RepositoryId)
+    REFERENCES Repositories(Id),
+CONSTRAINT FK_RepositoriesContributors_Users
+   FOREIGN KEY(ContributorId)
+    REFERENCES Users(Id)
+ )
+
+
+ CREATE TABLE Issues
+ (
+  Id INT PRIMARY KEY IDENTITY,
+  Title NVARCHAR(255) NOT NULL,
+  IssueStatus CHAR(6) NOT  NULL,
+  RepositoryId INT 
+  CONSTRAINT FK_Issues_Repositories
+     FOREIGN KEY (RepositoryId ) REFERENCES Repositories(Id),
+   AssigneeId INT 
+   CONSTRAINT FK_Issues_Users
+      FOREIGN KEY (AssigneeId) REFERENCES Users(Id)
+	  )
+ 
+
+
+ CREATE TABLE Commits
+ (
+ Id INT PRIMARY KEY IDENTITY,
+ [Message] NVARCHAR(255) NOT NULL,
+
+ IssueId INT 
+ CONSTRAINT FK_Commits_Issues
+      FOREIGN KEY(IssueId) REFERENCES Issues(Id),
+ RepositoryId INT
+ CONSTRAINT FK_Commits_Repositories
+      FOREIGN KEY(RepositoryId) REFERENCES Repositories(Id),
+ ContributorId INT
+ CONSTRAINT FK_Commits_Users
+      FOREIGN KEY( ContributorId) REFERENCES Users(Id)
+)
+ 
+
+ CREATE TABLE Files
+(
+Id INT PRIMARY KEY IDENTITY,
+[Name] NVARCHAR(100) NOT NULL,
+Size DECIMAL(15,2) NOT NULL,
+ParentId INT FOREIGN KEY 
+    REFERENCES Files(id),         
+ CommitId INT
+  CONSTRAINT FK_Files_Users
+      FOREIGN KEY(CommitId) REFERENCES Commits(Id)
+)
+
+
+
+
+
+INSERT INTO Issues(Title,IssueStatus	,RepositoryId,AssigneeId)
+VALUES
+      ('Critical Problem with HomeController.cs file','open',1,4),
+      ('Typo fix in Judge.html','open',	4,3),
+      ('Implement documentation for UsersService.cs','closed',8	,2),
+       ('Unreachable code in Index.cs',	'open',	9,8)
+
+
+
+
+INSERT INTO Files([Name],Size,ParentId,CommitId)
+VALUES
+      ('Trade.idk',	2598.0,	1	,1),
+       ('menu.net',	9238.31,2,	2),
+        ('Administrate.soshy',1246.93,3	,3),
+       ('Controller.php',7353.15,	4	,4),
+       ('Find.java',	9957.86	,5	,5),
+        ('Controller.json',	14034.87,	3	,6),
+         ('Operate.xix',	7662.92,	7	,7)
+
+
+ UPDATE Issues
+ SET IssueStatus='closed'
+ WHERE AssigneeId=6
+
+ SELECT*FROM Repositories
+
+
+ --DELETE
+
+     DELETE FROM RepositoriesContributors
+	 WHERE RepositoryId IN (
+                            SELECT   Id 
+			                     FROM Repositories
+			                WHERE [Name]='Softuni-Teamwork'
+	--следващите не са извършени !!!!!!!!!!!!!		               )
+    DELETE FROM Files
+	WHERE Id IN(
+              SELECT Id FROM Commits
+			  WHERE Id IN(
+						   SELECT   Id 
+			                     FROM Repositories
+			                WHERE [Name]='Softuni-Teamwork')
+				)
+
+						   
+	DELETE FROM Commits
+	WHERE RepositoryId IN (
+	                        SELECT   Id 
+			                     FROM Repositories
+			                WHERE [Name]='Softuni-Teamwork'
+							)
+
+
+DELETE FROM Issues
+	WHERE RepositoryId IN (
+	                        SELECT   Id 
+			                     FROM Repositories
+			                WHERE [Name]='Softuni-Teamwork'
+							)
+
+
+
